@@ -21,6 +21,7 @@ var reg *regexp.Regexp
 func Error(w http.ResponseWriter, message string, code int) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8") // ну понятно, кодировка
 	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(code)
 	_, _ = fmt.Fprintln(w, fmt.Sprintf(`{"message":"%s"}`, message))
 }
@@ -28,6 +29,7 @@ func Error(w http.ResponseWriter, message string, code int) {
 func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 
 	res.Header().Set("Content-Type", "application/json; charset=utf-8") // ну понятно, кодировка
+	res.Header().Set("Access-Control-Allow-Origin", "*")
 
 	if strings.Contains(req.URL.Path, ".") {
 		Error(res, "Method not found", http.StatusNotFound)
