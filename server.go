@@ -17,7 +17,6 @@ var db *pgx.ConnPool
 var reg *regexp.Regexp
 
 func Error(w http.ResponseWriter, message string, code int) {
-	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.WriteHeader(code)
 	_, _ = fmt.Fprintln(w, fmt.Sprintf(`{"message":"%s"}`, message))
 }
@@ -28,6 +27,12 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Access-Control-Allow-Origin", "*")
 	res.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
 	res.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization")
+	res.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization")
+	res.Header().Set("X-Content-Type-Options", "nosniff")
+
+	if req.Method == "OPTIONS" {
+		return
+	}
 
 	if strings.Contains(req.URL.Path, ".") {
 		Error(res, "Method not found", http.StatusNotFound)
