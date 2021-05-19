@@ -1,4 +1,4 @@
 .idea
 server.env
-push.sh
-
+*.sh
+ssh

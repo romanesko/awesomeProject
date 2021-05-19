@@ -3,11 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt" // пакет для форматированного ввода вывода
+	"github.com/jackc/pgx"
 	"os"
 	"regexp"
-
-	"github.com/jackc/pgx"
-
 	//"github.com/pkg/errors"
 	"io/ioutil"
 	"log"      // пакет для логирования
