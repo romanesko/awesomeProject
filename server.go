@@ -128,6 +128,7 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 				status = http.StatusForbidden
 				message = dberr.Message
 			case "P0001":
+			case "XX000":
 				message = dberr.Message
 			default:
 				log.Printf("%s: %s\n", dberr.Code, dberr.Message)
