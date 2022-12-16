@@ -191,8 +191,8 @@ func main() {
 	reg, err = regexp.Compile("[^a-zA-Z0-9_]+") // компилируем regexp для замены всего опасного в имени функции
 
 	http.HandleFunc("/", HomeRouterHandler) // установим роутер
-	fmt.Println("Server started on 9000")
-	err = http.ListenAndServe(":9000", nil) // задаем слушать порт
+	fmt.Println("Server started on 9999")
+	err = http.ListenAndServe(":9999", nil) // задаем слушать порт
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
