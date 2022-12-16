@@ -1,4 +1,5 @@
 .idea
 server.env
-*.sh
+log.sh
+deploy.sh
 ssh
