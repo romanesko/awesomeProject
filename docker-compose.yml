@@ -2,8 +2,8 @@ version: "3.8"
 services:
   awesome-server:
     container_name: awesome-server
+    restart: unless-stopped
     build: .
     env_file:
         - ./server.env
     network_mode: host
-    restart: always
