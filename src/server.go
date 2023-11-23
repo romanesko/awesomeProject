@@ -158,11 +158,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	if len(dbPwd) == 0 {
-		fmt.Println("Please set AWP_DB_PASSWORD environment variable")
-		os.Exit(1)
-	}
-
 	if len(dbName) == 0 {
 		fmt.Println("Please set AWP_DB_NAME environment variable")
 		os.Exit(1)
