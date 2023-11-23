@@ -17,7 +17,7 @@ echo 'AWP_DB_PASSWORD=secret' >> server.env
 
 ### db function example
 ```sql
-create or replace function server_time(params json, _token uuid) returns json language plpgsql as
+create or replace function public.server_time(params json, _token uuid) returns json language plpgsql as
 $$
 DECLARE
     _response JSON;
@@ -35,9 +35,9 @@ BEGIN
 END
 $$;
 
--- alter function server_time(json, uuid) owner to postgres;
+-- alter function public.server_time(json, uuid) owner to postgres;
 
-select server_time('{"data":"test"}','83797f92-2083-4a02-a983-c48f9cd5573a')
+select public.server_time('{"data":"test"}','83797f92-2083-4a02-a983-c48f9cd5573a')
 ```
 
 
