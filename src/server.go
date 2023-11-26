@@ -1,11 +1,16 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt" // пакет для форматированного ввода вывода
-	"github.com/jackc/pgx"
-	"os"
 	"regexp"
+	"server/config"
+	"server/pkg/postgres"
+
+	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5/pgxpool"
+
 	//"github.com/pkg/errors"
 	"io/ioutil"
 	"log"      // пакет для логирования
@@ -13,7 +18,7 @@ import (
 	"strings"  // пакет для работы с  UTF-8 строками
 )
 
-var db *pgx.ConnPool
+var pool *pgxpool.Pool
 var reg *regexp.Regexp
 
 func Error(w http.ResponseWriter, message string, code int) {
@@ -107,7 +112,16 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 
 	query := fmt.Sprintf("select %s.%s($1::json, $2::uuid);", schemaName, functionName) // формируем строку запроса
 	var data string                                                                     // переменная для результата
-	err = db.QueryRow(query, string(jsonString), tokenRef).Scan(&data)                  // фигарим запрос в базу
+
+	conn, err := pool.Acquire(req.Context())
+	if err != nil {
+		fmt.Println("Error acquiring connection from pool:", err)
+		return
+	}
+	defer conn.Release()
+
+	err = conn.QueryRow(context.Background(), query, string(jsonString), tokenRef).Scan(&data)
+
 	log.Printf("query: %s\n", strings.Replace(strings.Replace(query, "$1", "'"+string(jsonString)+"'", -1), "$2", fmt.Sprintf("'%v'", token), -1))
 	if err != nil {
 		log.Printf("%s", err)
@@ -147,39 +161,13 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	ctx := context.Background()
 
-	dbUser := os.Getenv("AWP_DB_USER")
-	dbPwd := os.Getenv("AWP_DB_PASSWORD")
-	dbName := os.Getenv("AWP_DB_NAME")
-	dbHost := os.Getenv("AWP_DB_HOST")
+	config := config.ParseConfigurationFile()
+	pool = postgres.OpenPoolConnection(ctx, config)
+	defer pool.Close()
 
-	if len(dbUser) == 0 {
-		fmt.Println("Please set AWP_DB_USER environment variable")
-		os.Exit(1)
-	}
-
-	if len(dbName) == 0 {
-		fmt.Println("Please set AWP_DB_NAME environment variable")
-		os.Exit(1)
-	}
-
-	if len(dbHost) == 0 {
-		fmt.Println("Please set AWP_DB_HOST environment variable")
-		os.Exit(1)
-	}
-
-	conf := pgx.ConnPoolConfig{
-		ConnConfig: pgx.ConnConfig{
-			Host:     dbHost,
-			User:     dbUser,
-			Password: dbPwd,
-			Database: dbName,
-		},
-		MaxConnections: 5,
-	}
 	var err error
-	db, err = pgx.NewConnPool(conf)
-
 	if err != nil {
 		panic(err)
 	}
