@@ -1,4 +1,4 @@
-### install
+## install
 
 prepare env variables:
 ```bash
@@ -18,7 +18,7 @@ check logs:
 docker logs awesome-server -f
 ```
 
-### db function example
+## db function example
 ```sql
 create or replace function public.server_time(params json, _token uuid) returns json language plpgsql as
 $$
@@ -44,7 +44,7 @@ select public.server_time('{"data":"test"}','83797f92-2083-4a02-a983-c48f9cd5573
 ```
 
 
-### call example
+## call example
 
 ```bash
 curl --location 'http://localhost:9999/public/server/time?data=foo' --header 'Authorization: Token 83797f92-2083-4a02-a983-c48f9cd5573a'
