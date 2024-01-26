@@ -4,13 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 const (
-	env_file string = "../server.env"
-
 	env_user_field   string = "AWP_DB_USER"
 	env_pass_field   string = "AWP_DB_PASSWORD"
 	env_host_field   string = "AWP_DB_HOST"
@@ -50,10 +46,6 @@ func checkConfigFields(cfg *Config) {
 }
 
 func ParseConfigurationFile() *Config {
-	err := godotenv.Load(env_file)
-	if err != nil {
-		log.Fatalf("rrror loading configuration file '%s': %v", env_file, err.Error())
-	}
 
 	config := &Config{
 		User:     os.Getenv(env_user_field),

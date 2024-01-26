@@ -4,18 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt" // пакет для форматированного ввода вывода
-	"regexp"
-	"server/config"
-	"server/pkg/postgres"
-
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgxpool"
-
-	//"github.com/pkg/errors"
 	"io/ioutil"
 	"log"      // пакет для логирования
 	"net/http" // пакет для поддержки HTTP протокола
-	"strings"  // пакет для работы с  UTF-8 строками
+	"regexp"
+	"server/config"
+	"server/pkg/postgres"
+	"strings" // пакет для работы с  UTF-8 строками
 )
 
 var pool *pgxpool.Pool
@@ -163,8 +160,8 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 func main() {
 	ctx := context.Background()
 
-	config := config.ParseConfigurationFile()
-	pool = postgres.OpenPoolConnection(ctx, config)
+	conf := config.ParseConfigurationFile()
+	pool = postgres.OpenPoolConnection(ctx, conf)
 	defer pool.Close()
 
 	var err error
