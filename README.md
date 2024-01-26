@@ -10,7 +10,7 @@ echo 'AWP_DB_PASSWORD=secret' >> server.env
 
 run it:
 ```bash
-docker run -d --rm --network host --env-file server.env --name awesome-server savarez/awesome-server
+docker run -d --rm -p 9999:9999 --env-file server.env --name awesome-server savarez/awesome-server
 ```
 
 check logs:
