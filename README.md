@@ -2,10 +2,10 @@
 
 prepare env variables:
 ```bash
-echo 'AWP_DB_HOST=172.17.0.1' >> server.env
-echo 'AWP_DB_NAME=postgres' >> server.env
-echo 'AWP_DB_USER=postgres' >> server.env
-echo 'AWP_DB_PASSWORD=secret' >> server.env
+echo 'AWP_DB_HOST=docker.for.mac.host.internal' >> server.env
+echo 'AWP_DB_NAME=dbname' >> server.env
+echo 'AWP_DB_USER=user' >> server.env
+echo 'AWP_DB_PASSWORD=password' >> server.env
 ```
 
 run it:
