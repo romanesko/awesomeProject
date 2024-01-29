@@ -33,7 +33,7 @@ func OpenPoolConnection(ctx context.Context, cfg *config.Config) (pool *pgxpool.
 		log.Fatalf("didn't manage to make connection with database, error: %v", err.Error())
 	}
 
-	log.Println("database connection is established successfully")
+	log.Printf("Connection to database \"%s\" at %s is established successfully\n", cfg.DBName, cfg.Host)
 
 	return pool
 }
