@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt" // пакет для форматированного ввода вывода
-	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"io/ioutil"
 	"log"      // пакет для логирования
@@ -122,10 +123,11 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 	log.Printf("query: %s\n", strings.Replace(strings.Replace(query, "$1", "'"+string(jsonString)+"'", -1), "$2", fmt.Sprintf("'%v'", token), -1))
 	if err != nil {
 		log.Printf("%s", err)
-		if dberr, ok := err.(pgx.PgError); ok {
+		var dbErr *pgconn.PgError
+		if errors.As(err, &dbErr) {
 			status := http.StatusBadRequest
 			var message string
-			switch dberr.Code {
+			switch dbErr.Code {
 			case "42883":
 				status = http.StatusNotFound
 				message = "MethodNotFound"
@@ -134,22 +136,19 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 				message = fmt.Sprintf(`/%s/ api does not exists`, schemaName)
 			case "ER401":
 				status = http.StatusUnauthorized
-				message = dberr.Message
+				message = dbErr.Message
 			case "ER403":
 				status = http.StatusForbidden
-				message = dberr.Message
+				message = dbErr.Message
 			case "P0001":
-				message = dberr.Message
+				message = dbErr.Message
 			case "XX000":
-				message = dberr.Message
+				message = dbErr.Message
 			default:
-				log.Printf("%s: %s\n", dberr.Code, dberr.Message)
+				log.Printf("%s: %s\n", dbErr.Code, dbErr.Message)
 				message = "Unhandled Exception"
 			}
 			Error(res, message, status)
-		} else {
-			log.Println(err.Error())
-			Error(res, "System Error", http.StatusInternalServerError)
 		}
 
 		return
