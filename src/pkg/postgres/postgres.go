@@ -33,7 +33,24 @@ func OpenPoolConnection(ctx context.Context, cfg *config.Config) (pool *pgxpool.
 		log.Fatalf("didn't manage to make connection with database, error: %v", err.Error())
 	}
 
-	log.Printf("Connection to database \"%s\" at %s is established successfully\n", cfg.DBName, cfg.Host)
+	var timeout = time.Duration(2) * time.Second
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+	conn, err := pool.Acquire(ctx)
+
+	if err != nil {
+		log.Fatalf("didn't manage to make connection with database, error: %v", err.Error())
+	}
+
+	var timestamp time.Time
+
+	err = conn.QueryRow(ctx, "select now()").Scan(&timestamp)
+
+	if err != nil {
+		log.Fatalf("didn't manage to make connection with database, error: %v", err.Error())
+	}
+
+	log.Printf("Connection to database \"%s\" at %s is established successfully. DB time: %s\n", cfg.DBName, cfg.Host, timestamp)
 
 	return pool
 }
