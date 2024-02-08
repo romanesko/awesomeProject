@@ -1,24 +1,27 @@
-## Direct run
+## Docker run
 
-prepare env variables:
-```bash
-echo 'AWP_DB_HOST=docker.for.mac.host.internal' >> server.env
-echo 'AWP_DB_NAME=dbname' >> server.env
-echo 'AWP_DB_USER=user' >> server.env
-echo 'AWP_DB_PASSWORD=password' >> server.env
+create an `.env` file with the following content:
+```
+AWP_DB_HOST=localhost
+AWP_DB_NAME=postgres
+AWP_DB_USER=postgres
+POSTGRES_PASSWORD=
 ```
 
-run it:
+run it in interactive mode:
+
 ```bash
-docker run -d --rm -p 9999:9999 --env-file server.env --name awesome-server savarez/awesome-server
+  docker run -it --rm -p 9999:9999 --env-file .env --name awesome-server savarez/awesome-server
 ```
 
-check logs:
+or run it like a daemon:
+
 ```bash
-docker logs awesome-server -f
+  docker run -d --rm -p 9999:9999 --env-file .env --name awesome-server savarez/awesome-server
 ```
 
-## Docker (compose) run:
+
+## Docker-compose with dedicated Postgresql:
 
 create a `.env` file with the following content:
 ```
