@@ -1,4 +1,4 @@
-## install
+## Direct run
 
 prepare env variables:
 ```bash
@@ -16,6 +16,27 @@ docker run -d --rm -p 9999:9999 --env-file server.env --name awesome-server sava
 check logs:
 ```bash
 docker logs awesome-server -f
+```
+
+## Docker (compose) run:
+
+create a `.env` file with the following content:
+```
+PROJECT_NAME=myproject
+POSTGRES_DB=myproject
+POSTGRES_USER=user
+POSTGRES_PASSWORD=secret
+```
+run it in interactive mode:
+
+```bash
+make run
+```
+
+or run it like a daemon:
+
+```bash
+make start  # use `make log` to check the logs
 ```
 
 ## db function example
