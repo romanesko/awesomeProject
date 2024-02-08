@@ -14,7 +14,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
   awesome-server:
@@ -25,6 +25,8 @@ services:
       AWP_DB_NAME: ${POSTGRES_DB}
       AWP_DB_USER: ${POSTGRES_USER}
       AWP_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "9999:9999"
     depends_on:
       postgres:
         condition: service_healthy
