@@ -11,6 +11,7 @@ const (
 	env_pass_field   string = "AWP_DB_PASSWORD"
 	env_host_field   string = "AWP_DB_HOST"
 	env_dbname_field string = "AWP_DB_NAME"
+	env_port_field   string = "AWP_DB_PORT"
 )
 
 type Config struct {
@@ -18,13 +19,15 @@ type Config struct {
 	Password string
 	Host     string
 	DBName   string
+	Port     string
 }
 
 func (cfg Config) GetPostgresConnString() string {
-	connString := fmt.Sprintf("postgresql://%s:%s@%s:/%s?sslmode=disable",
+	connString := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
 		cfg.User,
 		cfg.Password,
 		cfg.Host,
+		cfg.Port,
 		cfg.DBName,
 	)
 
@@ -52,6 +55,11 @@ func ParseConfigurationFile() *Config {
 		Password: os.Getenv(env_pass_field),
 		Host:     os.Getenv(env_host_field),
 		DBName:   os.Getenv(env_dbname_field),
+		Port:     os.Getenv(env_port_field),
+	}
+
+	if len(config.Port) == 0 {
+		config.Port = "5432"
 	}
 
 	checkConfigFields(config)
