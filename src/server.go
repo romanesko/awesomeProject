@@ -7,7 +7,7 @@ import (
 	"fmt" // пакет для форматированного ввода вывода
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"io/ioutil"
+	"io"
 	"log"      // пакет для логирования
 	"net/http" // пакет для поддержки HTTP протокола
 	"regexp"
@@ -87,7 +87,7 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	body, err := ioutil.ReadAll(req.Body)
+	body, err := io.ReadAll(req.Body)
 	if err != nil {
 		panic(err)
 	}
@@ -140,6 +140,9 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 			case "ER403":
 				status = http.StatusForbidden
 				message = dbErr.Message
+			case "ER404":
+				status = http.StatusNotFound
+				message = "Resource not Found"
 			case "P0001":
 				message = dbErr.Message
 			case "XX000":
