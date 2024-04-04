@@ -5,7 +5,8 @@ create an `.env` file with the following content:
 AWP_DB_HOST=localhost
 AWP_DB_NAME=postgres
 AWP_DB_USER=postgres
-POSTGRES_PASSWORD=
+AWP_DB_POST=5432
+AWP_DB_PASSWORD=password
 ```
 
 run it in interactive mode:
