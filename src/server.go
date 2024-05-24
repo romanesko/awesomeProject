@@ -156,7 +156,7 @@ func HomeRouterHandler(res http.ResponseWriter, req *http.Request) {
 
 		return
 	}
-	_, _ = fmt.Fprintf(res, data) // отдаём данные в поток writer'а
+	_, _ = fmt.Fprint(res, data) // отдаём данные в поток writer'а
 }
 
 func main() {
